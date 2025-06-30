@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>Professional CV Yaratuvchi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-4 max-w-7xl">
+        <header class="text-center mb-6 bg-white p-4 rounded-lg shadow-lg fade-in">
+            <div class="flex justify-between mb-4">
+                <select id="languageSelect" class="form-select w-1/4">
+                    <option value="uz">O'zbek</option>
+                    <option value="en">English</option>
+                    <option value="ru">Русский</option>
+                </select>
+                <button id="toggleDarkMode" class="btn btn-outline-secondary">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+            <h1 class="text-3xl font-bold text-blue-600 mb-2" data-i18n="title">CV tayyorlash – bir necha soniyada!</h1>
+            <p class="text-gray-600" data-i18n="subtitle">Hech qanday dizayn kerak emas – shunchaki to‘ldiring!</p>
+        </header>
+        <section class="bg-white p-4 rounded-lg shadow-lg fade-in">
+            <h2 class="text-xl font-semibold text-blue-600 mb-4" data-i18n="enterDetails">Ma'lumotlarni Kiriting</h2>
+            <div id="successAlert" class="alert alert-success d-none" role="alert" data-i18n="successMessage">
+                CV muvaffaqiyatli yaratildi!
+            </div>
+            <div id="errorAlert" class="alert alert-danger d-none" role="alert" data-i18n="errorMessage">
+                Iltimos, barcha majburiy maydonlarni to'ldiring!
+            </div>
+            <div id="form-sections">
+                <div id="basic-section" class="form-section">
+                    <div class="mb-4">
+                        <label for="fullName" class="form-label" data-i18n="fullName">To'liq Ism *</label>
+                        <input type="text" id="fullName" class="form-control" placeholder="Familiya Ism Sharif" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="jobTitle" class="form-label" data-i18n="jobTitle">Lavozim *</label>
+                        <input type="text" id="jobTitle" class="form-control" placeholder="Ishlagan lavozimingiz" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="summary" class="form-label" data-i18n="summary">Qisqacha ma'lumot</label>
+                        <textarea id="summary" class="form-control" placeholder="O'zingiz haqingizda qisqacha..."></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="photo" class="form-label" data-i18n="photo">Profil rasmi (ixtiyoriy)</label>
+                        <input type="file" id="photo" class="form-control" accept="image/jpeg,image/png">
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="btn btn-primary" id="nextToExperience" data-i18n="next">Keyingi</button>
+                    </div>
+                </div>
+                <div id="experience-section" class="form-section d-none">
+                    <div id="experience-fields">
+                        <div class="experience-item mb-4" data-id="exp-0">
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="position">Avval ishlagan lavozimingiz *</label>
+                                <input type="text" class="exp-position form-control" placeholder="Masalan: Dasturchi" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="company">Korxona *</label>
+                                <input type="text" class="exp-company form-control" placeholder="Korxona nomi" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="date">Sana *</label>
+                                <input type="text" class="exp-date form-control" placeholder="Masalan: 2020 - 2023" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="description">Tavsif</label>
+                                <textarea class="exp-description form-control" placeholder="Ish tajribangiz haqida..."></textarea>
+                            </div>
+                            <button class="btn btn-danger btn-sm remove-experience"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-sm" id="add-experience" data-i18n="add">Qo'shish</button>
+                    <div class="flex justify-between mt-3">
+                        <button class="btn btn-secondary" id="backToBasic" data-i18n="back">Orqaga</button>
+                        <button class="btn btn-primary" id="nextToEducation" data-i18n="next">Keyingi</button>
+                    </div>
+                </div>
+                <div id="education-section" class="form-section d-none">
+                    <div id="education-fields">
+                        <div class="education-item mb-4" data-id="edu-0">
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="degree">Ta'lim darajasi *</label>
+                                <input type="text" class="edu-degree form-control" placeholder="Masalan: Bakalavr" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="institution">O'quv muassasasi *</label>
+                                <input type="text" class="edu-institution form-control" placeholder="Universitet nomi" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="date">Sana *</label>
+                                <input type="text" class="edu-date form-control" placeholder="Masalan: 2016 - 2020" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" data-i18n="descriptionOptional">Tavsif (ixtiyoriy)</label>
+                                <textarea class="edu-description form-control" placeholder="Qo'shimcha ma'lumotlar..."></textarea>
+                            </div>
+                            <button class="btn btn-danger btn-sm remove-education"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <button class="btn btn-success btn-sm" id="add-education" data-i18n="add">Qo'shish</button>
+                    <div class="flex justify-between mt-3">
+                        <button class="btn btn-secondary" id="backToExperience" data-i18n="back">Orqaga</button>
+                        <button class="btn btn-primary" id="nextToSkills" data-i18n="next">Keyingi</button>
+                    </div>
+                </div>
+                <div id="skills-section" class="form-section d-none">
+                    <div class="mb-4">
+                        <label class="form-label" data-i18n="professionalSkills">Professional ko'nikmalar *</label>
+                        <div id="skill-fields">
+                            <div class="skill-item flex gap-3 mb-3 items-center" data-id="skill-0">
+                                <input type="text" class="skill-name form-control flex-1" placeholder="Ko'nikma nomi" required>
+                                <select class="skill-level form-select w-1/3">
+                                    <option value="beginner" data-i18n="beginner">Boshlang'ich</option>
+                                    <option value="intermediate" data-i18n="intermediate">O'rta</option>
+                                    <option value="advanced" data-i18n="advanced">Yuqori</option>
+                                    <option value="expert" data-i18n="expert">Expert</option>
+                                </select>
+                                <button class="btn btn-danger btn-sm remove-skill"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button class="btn btn-success btn-sm" id="add-skill" data-i18n="add">Qo'shish</button>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label" data-i18n="languages">Biladigan tillar</label>
+                        <div id="language-fields">
+                            <div class="language-item flex gap-3 mb-3 items-center" data-id="lang-0">
+                                <input type="text" class="lang-name form-control flex-1" placeholder="Til nomi">
+                                <select class="lang-level form-select w-1/3">
+                                    <option value="beginner" data-i18n="beginner">Boshlang'ich</option>
+                                    <option value="intermediate" data-i18n="intermediate">O'rta</option>
+                                    <option value="advanced" data-i18n="advanced">Yuqori</option>
+                                    <option value="native" data-i18n="native">Ona tili</option>
+                                </select>
+                                <button class="btn btn-danger btn-sm remove-language"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                        <button class="btn btn-success btn-sm" id="add-language" data-i18n="add">Qo'shish</button>
+                    </div>
+                    <div class="mb-4">
+                        <label for="contact-email" class="form-label" data-i18n="email">Elektron pochta *</label>
+                        <input type="email" id="contact-email" class="form-control" placeholder="email@example.com" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="contact-phone" class="form-label" data-i18n="phone">Telefon raqam *</label>
+                        <input type="text" id="contact-phone" class="form-control" placeholder="+998901234567" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="contact-address" class="form-label" data-i18n="address">Manzil</label>
+                        <input type="text" id="contact-address" class="form-control" placeholder="Shahar, tuman">
+                    </div>
+                    <div class="flex justify-between mt-3">
+                        <button class="btn btn-secondary" id="backToEducation" data-i18n="back">Orqaga</button>
+                        <button class="btn btn-primary" id="nextToCustomize" data-i18n="next">Keyingi</button>
+                    </div>
+                </div>
+                <div id="customize-section" class="form-section d-none">
+                    <div class="customization-panel">
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2" data-i18n="templates">Preset Dizaynlar</h3>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="preset-option bg-blue-100" data-preset="professional" data-i18n="professional">Professional</div>
+                                <div class="preset-option" data-preset="modern" data-i18n="modern">Modern</div>
+                                <div class="preset-option" data-preset="classic" data-i18n="classic">Classic</div>
+                                <div class="preset-option" data-preset="creative" data-i18n="creative">Creative</div>
+                                <div class="preset-option" data-preset="minimalist" data-i18n="minimalist">Minimalist</div>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2" data-i18n="textSettings">Matn Sozlamalari</h3>
+                            <div class="mb-2">
+                                <label class="form-label" data-i18n="fontType">Shrift Turi</label>
+                                <select id="font-family" class="form-select">
+                                    <option value="Inter" selected>Inter</option>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Times New Roman">Times New Roman</option>
+                                    <option value="Roboto">Roboto</option>
+                                    <option value="Georgia">Georgia</option>
+                                </select>
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-i18n="fontSize">Shrift O'lchami (px)</label>
+                                <input type="number" id="font-size" class="form-control" value="12" min="8" max="14">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-i18n="fontColor">Matn Rangi</label>
+                                <input type="color" id="font-color" class="color-picker" value="#000000">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <h3 class="text-lg font-semibold mb-2" data-i18n="backgroundSettings">Fon Sozlamalari</h3>
+                            <div class="mb-2">
+                                <label class="form-label" data-i18n="backgroundColor">Umumiy Fon</label>
+                                <input type="color" id="bg-color" class="color-picker" value="#ffffff">
+                            </div>
+                            <div class="mb-2">
+                                <label class="form-label" data-i18n="headerBackground">Header Foni</label>
+                                <input type="color" id="header-bg-color" class="color-picker" value="#2563eb">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between mt-3">
+                        <button class="btn btn-secondary" id="backToSkills" data-i18n="back">Orqaga</button>
+                        <button class="btn btn-primary" id="previewCv" data-i18n="preview">Ko'rish</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <div class="modal fade" id="cvPreviewModal" tabindex="-1" aria-labelledby="cvPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cvPreviewModalLabel" data-i18n="cvPreview">CV Ko'rinishi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="cv-template mx-auto" id="cv-preview">
+                        <div class="cv-header bg-blue-600 text-white p-4 text-center">
+                            <div class="cv-photo w-24 h-24 rounded-full mx-auto mb-2 overflow-hidden bg-gray-200">
+                                <img id="cv-photo-preview" src="" alt="Profil rasmi" class="w-full h-full object-cover" style="display: none;">
+                                <i class="fas fa-user text-4xl text-gray-400 flex items-center justify-center h-full"></i>
+                            </div>
+                            <h1 class="cv-name text-xl font-bold">Ism Familiya</h1>
+                            <h2 class="cv-title text-md opacity-90">Lavozim</h2>
+                        </div>
+                        <div class="cv-body flex flex-row">
+                            <div class="cv-left p-4 w-2/5 border-r border-gray-200">
+                                <div class="cv-section mb-4" data-section="summary">
+                                    <h3 class="cv-section-title" data-i18n="summary">Ma'lumot</h3>
+                                    <p id="cv-summary" class="text-sm">Qisqacha ma'lumot kiritilmagan</p>
+                                </div>
+                                <div class="cv-section mb-4" data-section="experience">
+                                    <h3 class="cv-section-title" data-i18n="experience">Tajriba</h3>
+                                    <div id="cv-experience" class="text-sm"></div>
+                                </div>
+                                <div class="cv-section mb-4" data-section="education">
+                                    <h3 class="cv-section-title" data-i18n="education">Ta'lim</h3>
+                                    <div id="cv-education" class="text-sm"></div>
+                                </div>
+                            </div>
+                            <div class="cv-right p-4 w-3/5">
+                                <div class="cv-section mb-4" data-section="skills">
+                                    <h3 class="cv-section-title" data-i18n="skills">Ko'nikmalar</h3>
+                                    <div id="cv-skills" class="text-sm"></div>
+                                </div>
+                                <div class="cv-section mb-4" data-section="languages">
+                                    <h3 class="cv-section-title" data-i18n="languages">Tillar</h3>
+                                    <div id="cv-languages" class="text-sm"></div>
+                                </div>
+                                <div class="cv-section mb-4" data-section="contact">
+                                    <h3 class="cv-section-title" data-i18n="contact">Aloqa</h3>
+                                    <div class="cv-contact-item flex mb-2">
+                                        <i class="fas fa-envelope text-blue-600 mr-2"></i>
+                                        <div id="cv-email">email@example.com</div>
+                                    </div>
+                                    <div class="cv-contact-item flex mb-2">
+                                        <i class="fas fa-phone text-blue-600 mr-2"></i>
+                                        <div id="cv-phone">+998901234567</div>
+                                    </div>
+                                    <div class="cv-contact-item flex mb-2">
+                                        <i class="fas fa-map-marker-alt text-blue-600 mr-2"></i>
+                                        <div id="cv-address">Shahar, tuman</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="back">Qaytish</button>
+                    <button type="button" class="btn btn-success" id="downloadPdfModal" data-i18n="downloadPdf"><i class="fas fa-file-pdf"></i> PDF Yuklab Olish</button>
+                    <button type="button" class="btn btn-secondary" id="downloadJpgModal" data-i18n="downloadJpg"><i class="fas fa-file-image"></i> JPG Yuklab Olish</button>
+                    <button type="button" class="btn btn-info" id="downloadPngModal" data-i18n="downloadPng"><i class="fas fa-file-image"></i> PNG Yuklab Olish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="loader" id="pdfLoader"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="script.js"></script>
+</body>
+</html>
